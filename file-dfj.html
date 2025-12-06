@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Китайская кухня для Ребекки</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .game-container {
+            background: linear-gradient(145deg, #ffffff, #f0f0f0);
+            border-radius: 25px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 900px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .game-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .game-title {
+            color: #e91e63;
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 0 #fce4ec;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        
+        .game-subtitle {
+            color: #673ab7;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+        
+        .score-board {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(45deg, #4caf50, #8bc34a);
+            padding: 15px 25px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .score-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .hearts {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .heart {
+            font-size: 1.5rem;
+            color: #e91e63;
+            animation: heartbeat 1.5s infinite;
+        }
+        
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .question-area {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            text-align: center;
+            border: 3px solid #ff9800;
+        }
+        
+        .question-text {
+            font-size: 1.4rem;
+            color: #e65100;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .play-question-btn {
+            background: linear-gradient(45deg, #ff5722, #ff9800);
+            border: none;
+            border-radius: 50px;
+            padding: 15px 30px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 8px 15px rgba(255, 87, 34, 0.3);
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 8px 15px rgba(255, 87, 34, 0.3); }
+            50% { box-shadow: 0 8px 25px rgba(255, 87, 34, 0.5); }
+            100% { box-shadow: 0 8px 15px rgba(255, 87, 34, 0.3); }
+        }
+        
+        .play-question-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 20px rgba(255, 87, 34, 0.4);
+        }
+        
+        .ingredients-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .ingredient-card {
+            background: linear-gradient(145deg, #ffffff, #f5f5f5);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ingredient-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .ingredient-card.correct {
+            border-color: #4caf50;
+            background: linear-gradient(145deg, #e8f5e8, #c8e6c9);
+            animation: correctAnswer 0.6s ease;
+        }
+        
+        .ingredient-card.wrong {
+            border-color: #f44336;
+            background: linear-gradient(145deg, #ffebee, #ffcdd2);
+            animation: shake 0.6s ease;
+        }
+        
+        @keyframes correctAnswer {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-10px); }
+            40%, 80% { transform: translateX(10px); }
+        }
+        
+        .ingredient-emoji {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            display: block;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .ingredient-name {
+            font-size: 1.1rem;
+            color: #2c3e50;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .ingredient-chinese {
+            font-size: 1.8rem;
+            color: #e91e63;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .ingredient-pinyin {
+            font-size: 1rem;
+            color: #9c27b0;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+        
+        .listen-btn {
+            background: linear-gradient(45deg, #2196f3, #21cbf3);
+            border: none;
+            border-radius: 25px;
+            padding: 8px 15px;
+            color: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
+        }
+        
+        .listen-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(33, 150, 243, 0.4);
+        }
+        
+        .next-btn {
+            display: block;
+            margin: 25px auto;
+            background: linear-gradient(45deg, #4caf50, #8bc34a);
+            border: none;
+            border-radius: 30px;
+            padding: 15px 40px;
+            color: white;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 8px 15px rgba(76, 175, 80, 0.3);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .next-btn.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .next-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 20px rgba(76, 175, 80, 0.4);
+        }
+        
+        .celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ff6b6b;
+            animation: confetti-fall 3s linear infinite;
+        }
+        
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+        
+        .game-complete {
+            text-align: center;
+            background: linear-gradient(135deg, #fff9c4, #f4e04d);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 20px;
+            border: 3px solid #fbc02d;
+            display: none;
+        }
+        
+        .game-complete.show {
+            display: block;
+            animation: slideUp 0.5s ease;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .restart-btn {
+            background: linear-gradient(45deg, #e91e63, #f06292);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            box-shadow: 0 6px 12px rgba(233, 30, 99, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .restart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(233, 30, 99, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1 class="game-title">🍳 Китайская кухня 🥢</h1>
+            <p class="game-subtitle">Слушай и выбирай правильные ингредиенты!</p>
+        </div>
+
+        <div class="score-board">
+            <div class="score-item">
+                <span>Очки: </span>
+                <span id="score">0</span>
+                <span>🌟</span>
+            </div>
+            <div class="score-item">
+                <span>Раунд: </span>
+                <span id="round">1</span>
+                <span>/</span>
+                <span id="total-rounds">10</span>
+            </div>
+            <div class="hearts" id="hearts">
+                <span class="heart">❤️</span>
+                <span class="heart">❤️</span>
+                <span class="heart">❤️</span>
+            </div>
+        </div>
+
+        <div class="question-area">
+            <p class="question-text">Послушай и найди этот ингредиент:</p>
+            <button class="play-question-btn" onclick="playCurrentQuestion()">
+                🔊 Воспроизвести слово
+            </button>
+        </div>
+
+        <div class="ingredients-grid" id="ingredients-grid">
+            <!-- Ингредиенты будут добавлены динамически -->
+        </div>
+
+        <button class="next-btn" id="next-btn" onclick="nextRound()">
+            Следующий раунд ➡️
+        </button>
+
+        <div class="game-complete" id="game-complete">
+            <h2>🎉 Поздравляем, Ребекка! 🎉</h2>
+            <p>Ты отлично выучила китайские слова!</p>
+            <p>Твой результат: <span id="final-score"></span> из <span id="max-score"></span> очков!</p>
+            <button class="restart-btn" onclick="restartGame()">Играть снова 🔄</button>
+        </div>
+    </div>
+
+    <div class="celebration" id="celebration"></div>
+
+    <script>
+        // Данные об ингредиентах
+        const ingredients = [
+            { name: "Яблоко", chinese: "苹果", pinyin: "píngguǒ", emoji: "🍎" },
+            { name: "Банан", chinese: "香蕉", pinyin: "xiāngjiāo", emoji: "🍌" },
+            { name: "Рис", chinese: "米饭", pinyin: "mǐfàn", emoji: "🍚" },
+            { name: "Рыба", chinese: "鱼", pinyin: "yú", emoji: "🐟" },
+            { name: "Яйцо", chinese: "鸡蛋", pinyin: "jīdàn", emoji: "🥚" },
+            { name: "Молоко", chinese: "牛奶", pinyin: "niúnǎi", emoji: "🥛" },
+            { name: "Хлеб", chinese: "面包", pinyin: "miànbāo", emoji: "🍞" },
+            { name: "Помидор", chinese: "西红柿", pinyin: "xīhóngshì", emoji: "🍅" },
+            { name: "Морковь", chinese: "胡萝卜", pinyin: "húluóbo", emoji: "🥕" },
+            { name: "Картофель", chinese: "土豆", pinyin: "tǔdòu", emoji: "🥔" },
+            { name: "Лук", chinese: "洋葱", pinyin: "yángcōng", emoji: "🧅" },
+            { name: "Курица", chinese: "鸡肉", pinyin: "jīròu", emoji: "🍗" },
+            { name: "Вода", chinese: "水", pinyin: "shuǐ", emoji: "💧" },
+            { name: "Чай", chinese: "茶", pinyin: "chá", emoji: "🍵" },
+            { name: "Лимон", chinese: "柠檬", pinyin: "níngméng", emoji: "🍋" }
+        ];
+
+        // Состояние игры
+        let gameState = {
+            score: 0,
+            round: 1,
+            hearts: 3,
+            totalRounds: 10,
+            currentQuestion: null,
+            currentOptions: [],
+            isAnswered: false
+        };
+
+        // Инициализация игры
+        function initGame() {
+            resetGameState();
+            nextRound();
+        }
+
+        // Сброс состояния игры
+        function resetGameState() {
+            gameState = {
+                score: 0,
+                round: 1,
+                hearts: 3,
+                totalRounds: 10,
+                currentQuestion: null,
+                currentOptions: [],
+                isAnswered: false
+            };
+            updateUI();
+            document.getElementById('game-complete').classList.remove('show');
+        }
+
+        // Следующий раунд
+        function nextRound() {
+            if (gameState.round > gameState.totalRounds || gameState.hearts <= 0) {
+                endGame();
+                return;
+            }
+
+            gameState.isAnswered = false;
+            generateQuestion();
+            updateUI();
+            
+            // Скрыть кнопку "Следующий раунд"
+            document.getElementById('next-btn').classList.remove('show');
+            
+            // Автоматически проиграть вопрос
+            setTimeout(() => {
+                playCurrentQuestion();
+            }, 500);
+        }
+
+        // Генерация вопроса
+        function generateQuestion() {
+            // Выбираем правильный ответ
+            gameState.currentQuestion = ingredients[Math.floor(Math.random() * ingredients.length)];
+            
+            // Создаем варианты ответов (3 неправильных + 1 правильный)
+            gameState.currentOptions = [gameState.currentQuestion];
+            
+            while (gameState.currentOptions.length < 4) {
+                const randomIngredient = ingredients[Math.floor(Math.random() * ingredients.length)];
+                if (!gameState.currentOptions.find(option => option.chinese === randomIngredient.chinese)) {
+                    gameState.currentOptions.push(randomIngredient);
+                }
+            }
+            
+            // Перемешиваем варианты
+            gameState.currentOptions = shuffleArray(gameState.currentOptions);
+            
+            renderOptions();
+        }
+
+        // Перемешивание массива
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
+        // Отрисовка вариантов ответов
+        function renderOptions() {
+            const container = document.getElementById('ingredients-grid');
+            container.innerHTML = '';
+
+            gameState.currentOptions.forEach((ingredient, index) => {
+                const card = document.createElement('div');
+                card.className = 'ingredient-card';
+                card.onclick = () => selectAnswer(ingredient);
+                
+                card.innerHTML = `
+                    <span class="ingredient-emoji">${ingredient.emoji}</span>
+                    <div class="ingredient-name">${ingredient.name}</div>
+                    <div class="ingredient-chinese">${ingredient.chinese}</div>
+                    <div class="ingredient-pinyin">${ingredient.pinyin}</div>
+                    <button class="listen-btn" onclick="event.stopPropagation(); playSound('${ingredient.chinese}')">
+                        🔊 Слушать
+                    </button>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        // Выбор ответа
+        function selectAnswer(selectedIngredient) {
+            if (gameState.isAnswered) return;
+            
+            gameState.isAnswered = true;
+            
+            const cards = document.querySelectorAll('.ingredient-card');
+            
+            cards.forEach(card => {
+                const chineseText = card.querySelector('.ingredient-chinese').textContent;
+                if (chineseText === selectedIngredient.chinese) {
+                    if (selectedIngredient.chinese === gameState.currentQuestion.chinese) {
+                        card.classList.add('correct');
+                        gameState.score += 10;
+                        showCelebration();
+                        playSound('正确'); // "Правильно" на китайском
+                    } else {
+                        card.classList.add('wrong');
+                        gameState.hearts--;
+                        updateHearts();
+                    }
+                } else if (chineseText === gameState.currentQuestion.chinese) {
+                    card.classList.add('correct');
+                }
+            });
+            
+            // Показать кнопку следующего раунда
+            setTimeout(() => {
+                document.getElementById('next-btn').classList.add('show');
+                gameState.round++;
+            }, 1500);
+        }
+
+        // Воспроизведение текущего вопроса
+        function playCurrentQuestion() {
+            if (gameState.currentQuestion) {
+                playSound(gameState.currentQuestion.chinese);
+            }
+        }
+
+        // Воспроизведение звука
+        function playSound(text) {
+            if ('speechSynthesis' in window) {
+                // Останавливаем предыдущее воспроизведение
+                speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'zh-CN';
+                utterance.rate = 0.8; // Медленнее для лучшего понимания
+                utterance.pitch = 1.2; // Выше для детского восприятия
+                
+                speechSynthesis.speak(utterance);
+            } else {
+                alert(`Произношение недоступно. Текст: ${text}`);
+            }
+        }
+
+        // Обновление интерфейса
+        function updateUI() {
+            document.getElementById('score').textContent = gameState.score;
+            document.getElementById('round').textContent = gameState.round;
+            document.getElementById('total-rounds').textContent = gameState.totalRounds;
+        }
+
+        // Обновление сердечек
+        function updateHearts() {
+            const heartsContainer = document.getElementById('hearts');
+            heartsContainer.innerHTML = '';
+            
+            for (let i = 0; i < 3; i++) {
+                const heart = document.createElement('span');
+                heart.className = 'heart';
+                heart.textContent = i < gameState.hearts ? '❤️' : '🖤';
+                heartsContainer.appendChild(heart);
+            }
+        }
+
+        // Показать праздничную анимацию
+        function showCelebration() {
+            const celebration = document.getElementById('celebration');
+            celebration.innerHTML = '';
+            
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7', '#dda0dd'];
+            
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = Math.random() * 2 + 's';
+                celebration.appendChild(confetti);
+            }
+            
+            // Удаляем конфетти через 3 секунды
+            setTimeout(() => {
+                celebration.innerHTML = '';
+            }, 3000);
+        }
+
+        // Завершение игры
+        function endGame() {
+            const maxScore = gameState.totalRounds * 10;
+            document.getElementById('final-score').textContent = gameState.score;
+            document.getElementById('max-score').textContent = maxScore;
+            document.getElementById('game-complete').classList.add('show');
+            
+            if (gameState.score >= maxScore * 0.8) {
+                showCelebration();
+            }
+        }
+
+        // Перезапуск игры
+        function restartGame() {
+            initGame();
+        }
+
+        // Запуск игры при загрузке страницы
+        window.onload = initGame;
+    </script>
+</body>
+</html>
